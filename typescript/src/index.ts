@@ -1,7 +1,7 @@
 /**
- * Convert group name, token name and possible prefix into kebab-case string, joining everything together
+ * Convert group name, token name and possible prefix into camelCased string, joining everything together
  */
-Pulsar.registerFunction(
+ Pulsar.registerFunction(
   "readableVariableName",
   function (token, tokenGroup, prefix) {
     // Create array with all path segments and token name at the end
@@ -21,7 +21,7 @@ Pulsar.registerFunction(
     // camelcase string from all segments
      sentence = sentence
       .toLowerCase()
-      .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => "-" + chr)
+      .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase())
     
     // only allow letters, digits, underscore and hyphen
     sentence = sentence.replace(/[^a-zA-Z0-9_-]/g, '_')
@@ -35,23 +35,6 @@ Pulsar.registerFunction(
   }
 );
 
-function getGroupNameFromOriginName(originName){
-  return originName.substr(0, originName.indexOf('/')).trim().toLowerCase()
-}
-
-function getGroups(allTokens){
-  let allGroups = allTokens.map(token => getGroupNameFromOriginName(token.origin.name))
-  let uniqueGroups = [...new Set(allGroups)]
-  return uniqueGroups
-}
-
-Pulsar.registerFunction("getGroups", getGroups)
-
-function getTokensByGroup(allTokens, group) {
-  return allTokens.filter(token => token.origin.name.substr(0, getGroupNameFromOriginName(token.origin.name) === group))
-}
-
-Pulsar.registerFunction("getTokensByGroup", getTokensByGroup)
 
 function findAliases(token, allTokens){
   let aliases = allTokens.filter(t => t.value.referencedToken && t.value.referencedToken.id === token.id)
@@ -86,16 +69,19 @@ Pulsar.registerPayload("behavior", {
 });
 
 
-
 /** Describe complex shadow token */
 Pulsar.registerFunction("shadowDescription", function (shadowToken) {
+  
+  let connectedShadow = "transparent"
+  if (shadowToken.shadowLayers) {
+    connectedShadow = shadowToken.shadowLayers.reverse().map((shadow) => {
+        return shadowTokenValue(shadow)
+    }).join(", ")
+  } else {
+    return shadowTokenValue(shadowToken)
+  }
 
-  let connectedShadow = shadowToken.shadowLayers?.reverse().map((shadow) => {
-    return shadowTokenValue(shadow)
-  })
-    .join(", ")
-
-  return connectedShadow
+  return connectedShadow ?? ""
 })
 
 /** Convert complex shadow value to CSS representation */
@@ -109,8 +95,8 @@ function shadowTokenValue(shadowToken) {
 }
 
 
-function getValueWithCorrectUnit(value, unit, forceUnit) {
-  if (value === 0 && forceUnit !== true) {
+function getValueWithCorrectUnit(value) {
+  if (value === 0) {
     return `${value}`
   } else {
     // todo: add support for other units (px, rem, em, etc.)
@@ -141,11 +127,10 @@ function measureTypeIntoReadableUnit(type) {
 }
 
 function getFormattedRGB(colorValue) {
-
   if (colorValue.a === 0) {
     return `rgb(${colorValue.r},${colorValue.g},${colorValue.b})`
   } else {
-    const opacity = Math.round((colorValue.a / 255) * 100) / 100;
+    const opacity = Math.round((colorValue.a/255) * 100) / 100;
     return `rgba(${colorValue.r},${colorValue.g},${colorValue.b},${opacity})`
-  }
+  } 
 }
