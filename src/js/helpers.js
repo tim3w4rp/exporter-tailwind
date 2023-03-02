@@ -141,7 +141,6 @@ function measureTypeIntoReadableUnit(type) {
 }
 
 function getFormattedRGB(colorValue) {
-
   if (colorValue.a === 0) {
     return `rgb(${colorValue.r},${colorValue.g},${colorValue.b})`
   } else {
