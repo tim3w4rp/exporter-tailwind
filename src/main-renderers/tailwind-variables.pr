@@ -10,6 +10,7 @@ module.exports = {
                     {[ for token in tokens ]}
                         {[ let tokenName = cleanString(token.name) /]}
                         '{{ ((tokenName === "main") ? "DEFAULT" : tokenName) }}': '{[ inject "rendered-color" context token.value /]}', {[ inject "rendered-description" context token /]}
+                    
                     {[/]}
                 },
             {[/]}
