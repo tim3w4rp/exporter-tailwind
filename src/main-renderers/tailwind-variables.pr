@@ -5,15 +5,15 @@ module.exports = {
     {[ traverse colorGroup property subgroups into subgroup ]}
         {[ if !subgroup.isRoot ]}
         {[ const tokens = ds.tokensByGroupId(subgroup.id) /]}
-            {[ if tokens.length !== 0 ]}
-                '{{ readableGroupName(subgroup)}}': {
-                    {[ for token in tokens ]}
-                        {[ let tokenName = cleanString(token.name) /]}
-                        '{{ ((tokenName === "main") ? "DEFAULT" : tokenName) }}': '{[ inject "rendered-color" context token.value /]}', {[ inject "rendered-description" context token /]}
-                    
-                    {[/]}
-                },
+        {[ if tokens.length !== 0 ]}
+        '{{ readableGroupName(subgroup)}}': {
+            {[ for token in tokens ]}
+                {[ let tokenName = cleanString(token.name) /]}
+                '{{ ((tokenName === "main") ? "DEFAULT" : tokenName) }}': '{[ inject "rendered-color" context token.value /]}', {[ inject "rendered-description" context token /]}
+
             {[/]}
+        },
+        {[/]}
         {[else]}
         {[ const tokens = ds.tokensByGroupId(subgroup.id) /]}
         {[ for token in tokens ]}
