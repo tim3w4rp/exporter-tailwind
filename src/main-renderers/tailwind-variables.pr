@@ -7,11 +7,11 @@ module.exports = {
         {[ const tokens = ds.tokensByGroupId(subgroup.id) /]}
         {[ if tokens.length !== 0 ]}
         '{{ readableGroupName(subgroup)}}': {
-            {[ for token in tokens ]}
-                {[ let tokenName = cleanString(token.name) /]}
-                '{{ ((tokenName === "main") ? "DEFAULT" : tokenName) }}': '{[ inject "rendered-color" context token.value /]}', {[ inject "rendered-description" context token /]}
+        {[ for token in tokens ]}
+            {[ let tokenName = cleanString(token.name) /]}
+            '{{ ((tokenName === "main") ? "DEFAULT" : tokenName) }}': '{[ inject "rendered-color" context token.value /]}', {[ inject "rendered-description" context token /]}
 
-            {[/]}
+        {[/]}
         },
         {[/]}
         {[else]}
