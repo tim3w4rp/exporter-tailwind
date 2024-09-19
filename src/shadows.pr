@@ -11,6 +11,7 @@ and their value rendered using `shadow-color` blueprint
 {[ if (!token.isVirtual) ]}
     {[ inject "rendered-token-var" context token /]}  
 
+
 {[/]}
 {[/]}
 }
